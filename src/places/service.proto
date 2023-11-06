@@ -1,0 +1,44 @@
+
+
+syntax = "proto3";
+package places;
+option go_package="./places";
+
+service PlaceService {
+    rpc uploadPlaceInfo(Place) returns (Place) {}
+    rpc updatePlace(UpdatePlace) returns (Place) {}
+    rpc getPlaceInfo(PlaceName) returns (Place) {}
+    rpc searchPlaces(PlaceName) returns (PlaceList) {}
+    rpc filterPlaces(Filter) returns (PlaceList) {}
+    rpc removePlaces(PlaceName) returns (Empty) {}
+}
+
+message Empty{}
+
+message Place {
+    string name = 1;
+    int32 capacity = 2;
+    repeated string facilities = 3;
+}
+
+message UpdatePlace{
+    string targetName = 1;
+    Place newInfo = 2;
+}
+
+message PlaceId {
+    string id=1;
+}
+
+message PlaceList{
+    repeated Place place = 1;
+}
+
+message PlaceName{
+    string name = 1;
+}
+
+message Filter{
+    optional int32 minCapacity = 1;
+    repeated string facilities = 2;
+}
