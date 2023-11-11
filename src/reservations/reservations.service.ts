@@ -51,8 +51,8 @@ export class ReservationsService {
     return await this.reservationRepository.find();
   }
 
-  async findByOwner(ownerId: string) {
-    return await this.reservationRepository.findOneBy({ owner: ownerId });
+  async findByOwner(ownerName: string) {
+    return await this.reservationRepository.findOneBy({ owner: ownerName });
   }
 
   async remove(reservationId: number) {
@@ -78,9 +78,9 @@ export class MessagingHandler {
   }
 
   async connectToRabbitMQ() {
-    const connection = await amqp.connect('amqp://localhost:5672'); // Replace with your RabbitMQ connection URL
+    const connection = await amqp.connect('http://rabbitmq-service:5672'); // Replace with your RabbitMQ connection URL
     this.channel = await connection.createChannel();
-    const response = await axios.get('http://localhost:8080/search');
+    const response = await axios.get('http://place-service:8080/search');
     console.log(response.data);
     response.data.place.forEach((place) => {
       console.log('created queue for', `${place.owner}`);

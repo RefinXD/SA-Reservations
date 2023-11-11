@@ -13,9 +13,9 @@ export class ReservationsController {
     return this.reservationsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reservationsService.findByOwner(id);
+  @Get(':name')
+  findOne(@Param('name') name: string) {
+    return this.reservationsService.findByOwner(name);
   }
 
   @Delete(':id')
