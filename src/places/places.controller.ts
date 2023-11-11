@@ -1,21 +1,31 @@
-import { Controller, Inject } from '@nestjs/common';
-import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
-import { Place, UpdatePlace } from 'src/reservations/interface/place.interface';
-
-interface PlaceService {
-  updatePlace(updatePlace: UpdatePlace): Place;
-}
-
-@Controller('place')
+import { Body, Controller, Patch } from '@nestjs/common';
+import { UpdatePlace } from 'src/reservations/interface/place.interface';
+import { PlacesService } from './places.service';
+import { HttpService } from '@nestjs/axios';
+import axios from 'axios';
+@Controller('places')
 export class PlacesController {
-  private placeService: PlaceService;
-  constructor(@Inject('places') private readonly client: ClientGrpc) {}
+  constructor(
+    private readonly placeService: PlacesService,
+    private readonly httpService: HttpService,
+  ) {}
 
-  onModuleInit() {
-    this.placeService = this.client.getService<PlaceService>('places');
-  }
-  @GrpcMethod('places')
-  async updatePlace(data: UpdatePlace): Promise<Place> {
-    return await this.placeService.updatePlace(data);
+  @Patch()
+  async update(@Body() updatePlace: UpdatePlace): Promise<any> {
+    try {
+      const response = await axios.patch(
+        'http://192.168.247.4:8080/update',
+        updatePlace,
+      );
+
+      const data = response.data;
+
+      console.log('returned data:');
+      console.log(data);
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }

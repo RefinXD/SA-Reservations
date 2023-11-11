@@ -1,17 +1,12 @@
-// import { Module } from '@nestjs/common';
-// import { PlacesController } from './places.controller';
-// import { ClientsModule } from '@nestjs/microservices';
-// import { grpcClientOptions } from 'src/grpc-client-options';
+import { Module } from '@nestjs/common';
+import { PlacesController } from './places.controller';
+import { PlacesService } from './places.service';
+import { HttpModule } from '@nestjs/axios';
 
-// @Module({
-//   imports: [
-//     ClientsModule.register([
-//       {
-//         name: 'places',
-//         ...grpcClientOptions,
-//       },
-//     ]),
-//   ],
-//   controllers: [PlacesController],
-// })
-// export class PlacesModule {}
+@Module({
+  // // imports: [HttpModule, PlacesModule],
+  imports: [HttpModule],
+  controllers: [PlacesController],
+  providers: [PlacesService],
+})
+export class PlacesModule {}

@@ -6,7 +6,8 @@ import { ReservationsModule } from './reservations/reservations.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Reservation } from './reservations/entities/reservation.entity';
 import config from './config/config';
-//import { PlacesModule } from './places/places.module';
+import { HttpModule } from '@nestjs/axios';
+import { PlacesModule } from './places/places.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,7 +29,8 @@ import config from './config/config';
       inject: [ConfigService],
     }),
     ReservationsModule,
-    //PlacesModule,
+    PlacesModule,
+    HttpModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,23 +1,24 @@
 import { Module } from '@nestjs/common';
-import { ReservationsService } from './reservations.service';
+import {
+  MessagingHandler,
+  MessagingService,
+  ReservationsService,
+} from './reservations.service';
 import { ReservationsController } from './reservations.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Reservation } from './entities/reservation.entity';
-// import { ClientsModule } from '@nestjs/microservices';
-// import { grpcClientOptions } from 'src/grpc-client-options';
-//import { PlacesController } from 'src/places/places.controller';
+import { PlacesModule } from 'src/places/places.module';
+import { PlacesService } from 'src/places/places.service';
 
 @Module({
-  imports: [
-    // ClientsModule.register([
-    //   {
-    //     name: 'PLACE_PACKAGE',
-    //     ...grpcClientOptions,
-    //   },
-    // ]),
-    TypeOrmModule.forFeature([Reservation]),
-  ],
+  imports: [TypeOrmModule.forFeature([Reservation]), PlacesModule],
   controllers: [ReservationsController],
-  providers: [ReservationsService],
+  providers: [
+    ReservationsService,
+    PlacesService,
+    MessagingService,
+    MessagingHandler,
+  ],
+  exports: [MessagingService],
 })
 export class ReservationsModule {}

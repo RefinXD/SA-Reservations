@@ -1,21 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Delete } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
-import { CreateReservationDto } from './dto/create-reservation.dto';
-import { Place, UpdatePlace } from './interface/place.interface';
-
-export interface PlaceService {
-  updatePlace(data: UpdatePlace): Place;
-}
+import { PlacesService } from 'src/places/places.service';
 
 @Controller('reservations')
 export class ReservationsController {
-  constructor(private readonly reservationsService: ReservationsService) {}
-
-  @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
-  }
-
+  constructor(
+    private readonly reservationsService: ReservationsService,
+    readonly placeService: PlacesService,
+  ) {}
   @Get()
   findAll() {
     return this.reservationsService.findAll();

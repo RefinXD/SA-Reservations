@@ -9,4 +9,6 @@ export class Reservation {
   place: string;
   @Column()
   date: Date;
+  @Column()
+  numOfPeople: number;
 }

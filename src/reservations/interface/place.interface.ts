@@ -1,10 +1,6 @@
-export interface Place {
-  name: string;
-  capacity: number;
-  facilities: string[];
-}
+import { Place } from 'src/places/entities/place.entity';
 
-export interface UpdatePlace {
+export class UpdatePlace {
   targetName: string;
   newInfo: Place;
 }
