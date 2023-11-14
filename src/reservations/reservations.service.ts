@@ -19,15 +19,16 @@ export class ReservationsService {
       owner: createReservationDto.owner,
       place: createReservationDto.place,
       date: createReservationDto.date,
+      reserver: createReservationDto.reserver,
       numOfPeople: createReservationDto.numOfPeople,
     };
-    console.log('before');
-    console.log(createReservationDto.payload);
+    // console.log('before');
+    // console.log(createReservationDto.payload);
     createReservationDto.payload.NewInfo.AvailableSeat =
       createReservationDto.payload.NewInfo.AvailableSeat -
       createReservationDto.numOfPeople;
-    console.log('after');
-    console.log(createReservationDto.payload);
+    // console.log('after');
+    // console.log(createReservationDto.payload);
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
@@ -55,8 +56,40 @@ export class ReservationsService {
     return await this.reservationRepository.findOneBy({ owner: ownerName });
   }
 
-  async remove(reservationId: number) {
-    return await this.reservationRepository.delete({ id: reservationId });
+  async findByReserver(reserver: string) {
+    return await this.reservationRepository.findOneBy({ reserver: reserver });
+  }
+
+  async remove(reservationId: number, token: string) {
+    try {
+      const reservation = await this.reservationRepository.findOneBy({
+        id: reservationId,
+      });
+      const response = await axios.get('http://localhost:8080/search', {
+        params: {
+          name: reservation.place,
+        },
+      });
+      const data = response.data.place[0];
+      const payload = {
+        availableSeat: data.availableSeat + reservation.numOfPeople,
+      };
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      // TargetName: string;
+      // NewInfo: Place;
+      const res = await axios.patch(
+        'http://localhost:8080/update',
+        { targetName: data.name, NewInfo: payload },
+        config,
+      );
+      const resdata = res.data;
+      console.log(resdata);
+      return await this.reservationRepository.delete({ id: reservationId });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 @Injectable()
@@ -78,9 +111,9 @@ export class MessagingHandler {
   }
 
   async connectToRabbitMQ() {
-    const connection = await amqp.connect('http://rabbitmq-service:5672'); // Replace with your RabbitMQ connection URL
+    const connection = await amqp.connect('amqp://localhost:5672'); // Replace with your RabbitMQ connection URL
     this.channel = await connection.createChannel();
-    const response = await axios.get('http://place-service:8080/search');
+    const response = await axios.get('http://localhost:8080/search');
     console.log(response.data);
     response.data.place.forEach((place) => {
       console.log('created queue for', `${place.owner}`);

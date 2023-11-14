@@ -4,6 +4,7 @@ import { UpdatePlace } from '../interface/place.interface';
 export class CreateReservationDto {
   owner: string;
   place: string;
+  reserver: string;
   date: Date;
   numOfPeople: number;
   payload: PayloadDto;
@@ -16,6 +17,7 @@ export class PayloadDto {
 export class CreateReservationDtoNoPayload {
   owner: string;
   place: string;
+  reserver: string;
   date: Date;
   numOfPeople: number;
 }

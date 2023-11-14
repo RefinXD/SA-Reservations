@@ -6,6 +6,8 @@ export class Reservation {
   @Column()
   owner: string;
   @Column()
+  reserver: string;
+  @Column()
   place: string;
   @Column()
   date: Date;
